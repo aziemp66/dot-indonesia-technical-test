@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 
+	user_redis "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/redis"
 	util_error "github.com/aziemp66/dot-indonesia-technical-test/util/error"
 
 	"github.com/google/uuid"
@@ -24,6 +25,11 @@ func (userService *userService) UpdateUser(ctx context.Context, id, name string)
 	}
 
 	err = userService.userRepository.UpdateUser(ctx, uid, name)
+	if err != nil {
+		return err
+	}
+
+	err = user_redis.DeleteUserData(ctx, userService.redisManager, id)
 	if err != nil {
 		return err
 	}

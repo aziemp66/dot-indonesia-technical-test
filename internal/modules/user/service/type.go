@@ -18,10 +18,6 @@ type UserService interface {
 	// Returns a user response struct or an error if the user is not found.
 	GetUserByID(ctx context.Context, id string) (res user_model.GetUserResponse, err error)
 
-	// GetUserByEmail fetches a user's details by their email address.
-	// Returns a user response struct or an error if the user is not found.
-	GetUserByEmail(ctx context.Context, email string) (res user_model.GetUserResponse, err error)
-
 	// Login authenticates a user by their email and password.
 	// Returns a JWT token if authentication is successful or an error if login fails.
 	Login(ctx context.Context, email, password string) (token string, err error)
