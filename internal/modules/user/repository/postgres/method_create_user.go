@@ -10,13 +10,13 @@ import (
 )
 
 func (r *userRepositoryPostgres) CreateUser(ctx context.Context, email, hashedPassword, name string) (string, error) {
-	user := &user_model.User{
+	user := user_model.User{
 		ID:       uuid.New(),
 		Email:    email,
 		Password: hashedPassword,
 		Name:     name,
 	}
-	if err := r.db.WithContext(ctx).Create(user).Error; err != nil {
+	if err := r.db.WithContext(ctx).Create(&user).Error; err != nil {
 		return "", fmt.Errorf("error when creating user: %w", err)
 	}
 	return user.ID.String(), nil
