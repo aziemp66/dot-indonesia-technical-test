@@ -25,15 +25,15 @@ func TestUserServiceGetUserByEmail(t *testing.T) {
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
 	jwtMock := mock_util.NewMockJWTManager(ctrl)
 	passwordMock := mock_util.NewMockPasswordManager(ctrl)
+	redisMock := mock_util.NewMockRedisManager(ctrl)
 
-	service := NewUserService(repoMock, jwtMock, passwordMock)
+	service := NewUserService(repoMock, jwtMock, passwordMock, redisMock)
 
 	emailReq := "test@example.com"
 	userRes := user_model.GetUserResponse{
-		ID:      uuid.NewString(),
-		Name:    "John Smith",
-		Address: "Sesame Street No.5",
-		Email:   emailReq,
+		ID:    uuid.NewString(),
+		Name:  "John Smith",
+		Email: emailReq,
 	}
 
 	t.Run("should get user by email", func(t *testing.T) {

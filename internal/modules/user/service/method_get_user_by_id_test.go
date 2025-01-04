@@ -25,16 +25,16 @@ func TestUserServiceGetUserByID(t *testing.T) {
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
 	jwtMock := mock_util.NewMockJWTManager(ctrl)
 	passwordMock := mock_util.NewMockPasswordManager(ctrl)
+	redisMock := mock_util.NewMockRedisManager(ctrl)
 
-	service := NewUserService(repoMock, jwtMock, passwordMock)
+	service := NewUserService(repoMock, jwtMock, passwordMock, redisMock)
 
 	idReq := uuid.New()
 
 	userRes := user_model.GetUserResponse{
-		ID:      idReq.String(),
-		Name:    "John Smith",
-		Address: "Sesame Street No.5",
-		Email:   "johnsmith123@gmail.com",
+		ID:    idReq.String(),
+		Name:  "John Smith",
+		Email: "johnsmith123@gmail.com",
 	}
 
 	t.Run("should get user by id", func(t *testing.T) {

@@ -21,8 +21,9 @@ func TestUserServiceChangePassword(t *testing.T) {
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
 	jwtMock := mock_util.NewMockJWTManager(ctrl)
 	passwordMock := mock_util.NewMockPasswordManager(ctrl)
+	redisMock := mock_util.NewMockRedisManager(ctrl)
 
-	service := NewUserService(repoMock, jwtMock, passwordMock)
+	service := NewUserService(repoMock, jwtMock, passwordMock, redisMock)
 
 	id := uuid.New()
 	oldPassword := "oldPassword123"
@@ -55,9 +56,9 @@ func TestUserServiceChangePassword(t *testing.T) {
 	t.Run("should return error when failed retrieving db", func(t *testing.T) {
 		expectedErr := errors.New("error from db")
 
-		repoMock.EXPECT().GetUserByID(gomock.Any(), "").Return(user_model.User{}, expectedErr)
+		repoMock.EXPECT().GetUserByID(gomock.Any(), id).Return(user_model.User{}, expectedErr)
 
-		err := service.ChangePassword(context.Background(), "", "", "")
+		err := service.ChangePassword(context.Background(), id.String(), "", "")
 
 		require.EqualError(t, err, expectedErr.Error())
 	})

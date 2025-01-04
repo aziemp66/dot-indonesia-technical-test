@@ -12,4 +12,8 @@ type Config struct {
 	PostgresPassword string `env:"POSTGRES_PASSWORD"`
 	PostgresPort     string `env:"POSTGRES_PORT"`
 	PostgresDbName   string `env:"POSTGRES_DB_NAME"`
+
+	RedisHost     string `env:"REDIS_HOST"`
+	RedisPassword string `env:"REDIS_PASSWORD"`
+	RedisDB       int    `env:"REDIS_DB"`
 }

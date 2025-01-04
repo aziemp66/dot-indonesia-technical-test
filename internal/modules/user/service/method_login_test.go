@@ -25,8 +25,9 @@ func TestUserServiceLogin(t *testing.T) {
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
 	jwtMock := mock_util.NewMockJWTManager(ctrl)
 	passwordMock := mock_util.NewMockPasswordManager(ctrl)
+	redisMock := mock_util.NewMockRedisManager(ctrl)
 
-	service := NewUserService(repoMock, jwtMock, passwordMock)
+	service := NewUserService(repoMock, jwtMock, passwordMock, redisMock)
 
 	reqEmail := "test@example.com"
 	reqPassword := "password123"
@@ -47,7 +48,7 @@ func TestUserServiceLogin(t *testing.T) {
 		passwordMock.EXPECT().CheckPasswordHash(reqPassword, repoRes.Password).
 			Return(nil)
 
-		jwtMock.EXPECT().GenerateAuthToken(repoRes.ID, repoRes.Name, util_jwt.USER_ROLE, gomock.Any()).
+		jwtMock.EXPECT().GenerateAuthToken(repoRes.ID.String(), repoRes.Name, util_jwt.USER_ROLE, gomock.Any()).
 			Return(resToken, nil)
 
 		token, err := service.Login(context.Background(), reqEmail, reqPassword)

@@ -12,7 +12,7 @@ type UserService interface {
 
 	// Register registers a new user with the given details (email, password, name, address).
 	// It hashes the password before saving and returns the new user's ID or an error if registration fails.
-	Register(ctx context.Context, email, password, name, address string) (id string, err error)
+	Register(ctx context.Context, email, password, name string) (id string, err error)
 
 	// GetUserByID fetches a user's details by their ID.
 	// Returns a user response struct or an error if the user is not found.

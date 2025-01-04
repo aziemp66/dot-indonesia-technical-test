@@ -46,8 +46,7 @@ func TestUserHttpHandlerUpdateProfile(t *testing.T) {
 	app.PUT(url, handler.UpdateProfile)
 
 	reqBody := user_model.UpdateUserRequest{
-		Name:    "John",
-		Address: "SesameStreet",
+		Name: "John",
 	}
 	reqBodyBytes, _ := json.Marshal(reqBody)
 

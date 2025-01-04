@@ -47,10 +47,9 @@ func TestUserHttpHandlerGetUserByID(t *testing.T) {
 	urlWithUserID := fmt.Sprintf("/user/%s", userID)
 
 	expRes := user_model.GetUserResponse{
-		ID:      userID,
-		Name:    "John Smith",
-		Email:   "john@example.com",
-		Address: "Sesame Street 123",
+		ID:    userID,
+		Name:  "John Smith",
+		Email: "john@example.com",
 	}
 
 	t.Run("should successfully get user", func(t *testing.T) {

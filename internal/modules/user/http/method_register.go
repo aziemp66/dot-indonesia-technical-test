@@ -14,7 +14,7 @@ func (userHttpHandler *userHttpHandler) Register(ctx *gin.Context) {
 		return
 	}
 
-	userID, err := userHttpHandler.userService.Register(ctx.Request.Context(), req.Email, req.Password, req.Name, req.Address)
+	userID, err := userHttpHandler.userService.Register(ctx.Request.Context(), req.Email, req.Password, req.Name)
 	if err != nil {
 		ctx.Error(err)
 		return

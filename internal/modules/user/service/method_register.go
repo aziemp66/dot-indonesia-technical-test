@@ -8,7 +8,7 @@ import (
 	util_error "github.com/aziemp66/dot-indonesia-technical-test/util/error"
 )
 
-func (userService *userService) Register(ctx context.Context, email string, password string, name string, address string) (id string, err error) {
+func (userService *userService) Register(ctx context.Context, email, password, name string) (id string, err error) {
 	_, err = userService.userRepository.GetUserByEmail(ctx, email)
 	if err != nil && err != sql.ErrNoRows {
 		return "", err

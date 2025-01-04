@@ -43,14 +43,13 @@ func TestUserHttpHandlerRegister(t *testing.T) {
 	reqBody := user_model.CreateUserRequest{
 		Email:    "john@example.com",
 		Name:     "John",
-		Address:  "Sesame Street 123",
 		Password: "unsecure_password123",
 	}
 	reqBodyBytes, _ := json.Marshal(reqBody)
 
 	t.Run("should register successfully", func(t *testing.T) {
 		userID := "123"
-		serviceMock.EXPECT().Register(gomock.Any(), reqBody.Email, reqBody.Password, reqBody.Name, reqBody.Address).
+		serviceMock.EXPECT().Register(gomock.Any(), reqBody.Email, reqBody.Password, reqBody.Name).
 			Return(userID, nil)
 
 		req := httptest.NewRequest(http.MethodPost, url, bytes.NewReader(reqBodyBytes))
@@ -69,7 +68,7 @@ func TestUserHttpHandlerRegister(t *testing.T) {
 	t.Run("should return error when service error", func(t *testing.T) {
 		expError := util_error.NewBadRequest(nil, "email is already used")
 
-		serviceMock.EXPECT().Register(gomock.Any(), reqBody.Email, reqBody.Password, reqBody.Name, reqBody.Address).Return("", expError)
+		serviceMock.EXPECT().Register(gomock.Any(), reqBody.Email, reqBody.Password, reqBody.Name).Return("", expError)
 
 		req := httptest.NewRequest(http.MethodPost, url, bytes.NewReader(reqBodyBytes))
 		w := httptest.NewRecorder()

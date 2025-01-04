@@ -197,18 +197,18 @@ func (c *MockUserServiceLoginCall) DoAndReturn(f func(context.Context, string, s
 }
 
 // Register mocks base method.
-func (m *MockUserService) Register(ctx context.Context, email, password, name, address string) (string, error) {
+func (m *MockUserService) Register(ctx context.Context, email, password, name string) (string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Register", ctx, email, password, name, address)
+	ret := m.ctrl.Call(m, "Register", ctx, email, password, name)
 	ret0, _ := ret[0].(string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Register indicates an expected call of Register.
-func (mr *MockUserServiceMockRecorder) Register(ctx, email, password, name, address any) *MockUserServiceRegisterCall {
+func (mr *MockUserServiceMockRecorder) Register(ctx, email, password, name any) *MockUserServiceRegisterCall {
 	mr.mock.ctrl.T.Helper()
-	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockUserService)(nil).Register), ctx, email, password, name, address)
+	call := mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockUserService)(nil).Register), ctx, email, password, name)
 	return &MockUserServiceRegisterCall{Call: call}
 }
 
@@ -224,13 +224,13 @@ func (c *MockUserServiceRegisterCall) Return(id string, err error) *MockUserServ
 }
 
 // Do rewrite *gomock.Call.Do
-func (c *MockUserServiceRegisterCall) Do(f func(context.Context, string, string, string, string) (string, error)) *MockUserServiceRegisterCall {
+func (c *MockUserServiceRegisterCall) Do(f func(context.Context, string, string, string) (string, error)) *MockUserServiceRegisterCall {
 	c.Call = c.Call.Do(f)
 	return c
 }
 
 // DoAndReturn rewrite *gomock.Call.DoAndReturn
-func (c *MockUserServiceRegisterCall) DoAndReturn(f func(context.Context, string, string, string, string) (string, error)) *MockUserServiceRegisterCall {
+func (c *MockUserServiceRegisterCall) DoAndReturn(f func(context.Context, string, string, string) (string, error)) *MockUserServiceRegisterCall {
 	c.Call = c.Call.DoAndReturn(f)
 	return c
 }

@@ -6,13 +6,11 @@ import (
 	"errors"
 	"fmt"
 	"testing"
-	"time"
 
 	user_model "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/model"
 	mock_repository "github.com/aziemp66/dot-indonesia-technical-test/mock/repository"
 	mock_util "github.com/aziemp66/dot-indonesia-technical-test/mock/util"
 	util_error "github.com/aziemp66/dot-indonesia-technical-test/util/error"
-	util_jwt "github.com/aziemp66/dot-indonesia-technical-test/util/jwt"
 
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
@@ -27,19 +25,17 @@ func TestUserServiceRegister(t *testing.T) {
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
 	jwtMock := mock_util.NewMockJWTManager(ctrl)
 	passwordMock := mock_util.NewMockPasswordManager(ctrl)
+	redisMock := mock_util.NewMockRedisManager(ctrl)
 
-	service := NewUserService(repoMock, jwtMock, passwordMock)
+	service := NewUserService(repoMock, jwtMock, passwordMock, redisMock)
 
 	reqEmail := "test@example.com"
 	reqPassword := "password123"
 	reqName := "Test User"
-	reqAddress := "123 Test St"
 
 	hashedPassword := "secured_password"
 
 	resID := uuid.New()
-	token := "abcd123"
-	duration := 1 * time.Hour
 
 	t.Run("should register a new user", func(t *testing.T) {
 		repoMock.EXPECT().GetUserByEmail(gomock.Any(), reqEmail).Return(user_model.User{}, sql.ErrNoRows)
@@ -51,12 +47,10 @@ func TestUserServiceRegister(t *testing.T) {
 		repoMock.EXPECT().CreateUser(gomock.Any(), reqEmail, hashedPassword, reqName).
 			Return(resID.String(), nil)
 
-		jwtMock.EXPECT().GenerateAuthToken(resID, reqName, util_jwt.USER_ROLE, duration).Return(token, nil)
-
-		id, err := service.Register(context.Background(), reqEmail, reqPassword, reqName, reqAddress)
+		id, err := service.Register(context.Background(), reqEmail, reqPassword, reqName)
 
 		require.NoError(t, err)
-		assert.Equal(t, resID, id)
+		assert.Equal(t, resID.String(), id)
 	})
 
 	t.Run("should return error when failed retrieving from db", func(t *testing.T) {
@@ -64,7 +58,7 @@ func TestUserServiceRegister(t *testing.T) {
 
 		repoMock.EXPECT().GetUserByEmail(gomock.Any(), reqEmail).Return(user_model.User{}, expectedErr)
 
-		id, err := service.Register(context.Background(), reqEmail, reqPassword, reqName, reqAddress)
+		id, err := service.Register(context.Background(), reqEmail, reqPassword, reqName)
 
 		assert.Error(t, err)
 		assert.Empty(t, id)
@@ -80,7 +74,7 @@ func TestUserServiceRegister(t *testing.T) {
 		}
 		repoMock.EXPECT().GetUserByEmail(gomock.Any(), reqEmail).Return(repoRes, nil)
 
-		id, err := service.Register(context.Background(), reqEmail, reqPassword, reqName, reqAddress)
+		id, err := service.Register(context.Background(), reqEmail, reqPassword, reqName)
 
 		expectedErr := util_error.NewBadRequest(fmt.Errorf("%s is already registered", reqEmail), fmt.Sprintf("Email %s is already used", reqEmail))
 

@@ -2,14 +2,12 @@ package user_model
 
 type CreateUserRequest struct {
 	Name     string `json:"name" binding:"required"`
-	Address  string `json:"address" binding:"required"`
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,gte=6,lte=72"`
 }
 
 type UpdateUserRequest struct {
-	Name    string `json:"name" binding:"required"`
-	Address string `json:"address" binding:"required"`
+	Name string `json:"name" binding:"required"`
 }
 
 type LoginUserRequest struct {

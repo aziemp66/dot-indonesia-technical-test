@@ -24,8 +24,9 @@ func TestUserServiceUpdateUser(t *testing.T) {
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
 	jwtMock := mock_util.NewMockJWTManager(ctrl)
 	passwordMock := mock_util.NewMockPasswordManager(ctrl)
+	redisMock := mock_util.NewMockRedisManager(ctrl)
 
-	service := NewUserService(repoMock, jwtMock, passwordMock)
+	service := NewUserService(repoMock, jwtMock, passwordMock, redisMock)
 
 	id := uuid.New()
 	name := "John Doe"
@@ -50,9 +51,9 @@ func TestUserServiceUpdateUser(t *testing.T) {
 	t.Run("should return error when update user fails", func(t *testing.T) {
 		expectedErr := errors.New("failed to update user")
 
-		repoMock.EXPECT().GetUserByID(gomock.Any(), "").Return(user_model.User{}, expectedErr)
+		repoMock.EXPECT().GetUserByID(gomock.Any(), id).Return(user_model.User{}, expectedErr)
 
-		err := service.UpdateUser(context.Background(), "", "")
+		err := service.UpdateUser(context.Background(), id.String(), "")
 
 		require.Error(t, err)
 		assert.EqualError(t, err, expectedErr.Error())
