@@ -1,20 +1,21 @@
 package user_http
 
 import (
-	user_model "backend-template/internal/modules/user/model"
-	mock_service "backend-template/mock/service"
-	mock_util "backend-template/mock/util"
-	util_error "backend-template/util/error"
-	util_http "backend-template/util/http"
-	util_http_middleware "backend-template/util/http/middleware"
-	util_jwt "backend-template/util/jwt"
-	util_logger "backend-template/util/logger"
 	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	user_model "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/model"
+	mock_service "github.com/aziemp66/dot-indonesia-technical-test/mock/service"
+	mock_util "github.com/aziemp66/dot-indonesia-technical-test/mock/util"
+	util_error "github.com/aziemp66/dot-indonesia-technical-test/util/error"
+	util_http "github.com/aziemp66/dot-indonesia-technical-test/util/http"
+	util_http_middleware "github.com/aziemp66/dot-indonesia-technical-test/util/http/middleware"
+	util_jwt "github.com/aziemp66/dot-indonesia-technical-test/util/jwt"
+	util_logger "github.com/aziemp66/dot-indonesia-technical-test/util/logger"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"

@@ -6,12 +6,13 @@ import (
 	"errors"
 	"testing"
 
-	user_model "backend-template/internal/modules/user/model"
-	mock_repository "backend-template/mock/repository"
-	mock_util "backend-template/mock/util"
-	util_error "backend-template/util/error"
-	util_jwt "backend-template/util/jwt"
+	user_model "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/model"
+	mock_repository "github.com/aziemp66/dot-indonesia-technical-test/mock/repository"
+	mock_util "github.com/aziemp66/dot-indonesia-technical-test/mock/util"
+	util_error "github.com/aziemp66/dot-indonesia-technical-test/util/error"
+	util_jwt "github.com/aziemp66/dot-indonesia-technical-test/util/jwt"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -24,20 +25,17 @@ func TestUserServiceLogin(t *testing.T) {
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
 	jwtMock := mock_util.NewMockJWTManager(ctrl)
 	passwordMock := mock_util.NewMockPasswordManager(ctrl)
-	mailMock := mock_util.NewMockMailManager(ctrl)
 
-	service := NewUserService(repoMock, jwtMock, passwordMock, mailMock)
+	service := NewUserService(repoMock, jwtMock, passwordMock)
 
 	reqEmail := "test@example.com"
 	reqPassword := "password123"
 
 	repoRes := user_model.User{
-		ID:         "123",
-		Email:      reqEmail,
-		Password:   "secure_password",
-		Name:       "John Doe",
-		Address:    "Sesame Street",
-		IsVerified: true,
+		ID:       uuid.New(),
+		Email:    reqEmail,
+		Password: "secure_password",
+		Name:     "John Doe",
 	}
 
 	t.Run("should login user successfully", func(t *testing.T) {

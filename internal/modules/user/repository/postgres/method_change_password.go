@@ -1,11 +1,17 @@
 package user_repository_postgres
 
-import "context"
+import (
+	"context"
+	"fmt"
 
-// ChangePassword updates a user's password in the database based on their email.
-// new password must be hashed before function and returns an error if the update fails.
-func (userRepositoryPostgres *userRepositoryPostgres) ChangePassword(ctx context.Context, id string, hashedPassword string) (err error) {
-	_, err = userRepositoryPostgres.db.ExecContext(ctx, changePasswordQuery, id, hashedPassword)
+	user_model "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/model"
 
-	return err
+	"github.com/google/uuid"
+)
+
+func (r *userRepositoryPostgres) ChangePassword(ctx context.Context, id uuid.UUID, hashedPassword string) error {
+	if err := r.db.WithContext(ctx).Model(&user_model.User{}).Where("id = ?", id).Update("password", hashedPassword).Error; err != nil {
+		return fmt.Errorf("error when updating password: %w", err)
+	}
+	return nil
 }

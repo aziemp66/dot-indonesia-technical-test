@@ -3,7 +3,9 @@ package user_repository
 import (
 	"context"
 
-	user_model "backend-template/internal/modules/user/model"
+	user_model "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/model"
+
+	"github.com/google/uuid"
 )
 
 // UserRepository defines the set of operations for interacting with the user data at the repository level.
@@ -12,11 +14,11 @@ type UserRepository interface {
 
 	// CreateUser creates a new user in the repository with the given details.
 	// Returns the newly created user's ID or an error if the operation fails.
-	CreateUser(ctx context.Context, email, hashedPassword, name, address string) (id string, err error)
+	CreateUser(ctx context.Context, email, hashedPassword, name string) (id string, err error)
 
 	// GetUserByID retrieves a user by their unique ID.
 	// Returns the user details wrapped in a user_model.User struct, or an error if not found.
-	GetUserByID(ctx context.Context, id string) (res user_model.User, err error)
+	GetUserByID(ctx context.Context, id uuid.UUID) (res user_model.User, err error)
 
 	// GetUserByEmail retrieves a user by their email address.
 	// Returns the user details wrapped in a user_model.User struct, or an error if not found.
@@ -24,17 +26,13 @@ type UserRepository interface {
 
 	// ChangePassword updates a user's password in the repository.
 	// Takes the user's email and the new hashed password, returning an error if the update fails.
-	ChangePassword(ctx context.Context, id, hashedPassword string) (err error)
+	ChangePassword(ctx context.Context, id uuid.UUID, hashedPassword string) (err error)
 
 	// UpdateUser updates the user's name and address information.
 	// Takes the user's ID and the updated name and address values. Returns an error if the update fails.
-	UpdateUser(ctx context.Context, id string, name, address string) (err error)
+	UpdateUser(ctx context.Context, id uuid.UUID, name string) (err error)
 
 	// DeleteUser removes a user from the repository by their ID.
 	// Returns an error if the deletion operation fails.
-	DeleteUser(ctx context.Context, id string) (err error)
-
-	// VerifyUser marks a user as verified based on their email address.
-	// Typically used after a successful email verification process.
-	VerifyUser(ctx context.Context, id string) (err error)
+	DeleteUser(ctx context.Context, id uuid.UUID) (err error)
 }

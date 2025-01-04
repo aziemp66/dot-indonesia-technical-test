@@ -1,21 +1,29 @@
 package user_service
 
 import (
-	util_error "backend-template/util/error"
 	"context"
 	"database/sql"
 	"fmt"
+
+	util_error "github.com/aziemp66/dot-indonesia-technical-test/util/error"
+
+	"github.com/google/uuid"
 )
 
-func (userService *userService) UpdateUser(ctx context.Context, id, name, address string) (err error) {
-	_, err = userService.userRepository.GetUserByID(ctx, id)
+func (userService *userService) UpdateUser(ctx context.Context, id, name string) (err error) {
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		return util_error.NewBadRequest(err, "id must be uuid")
+	}
+
+	_, err = userService.userRepository.GetUserByID(ctx, uid)
 	if err == sql.ErrNoRows {
 		return util_error.NewNotFound(fmt.Errorf("user with the id of %s is not found", id), "User not found")
 	} else if err != nil {
 		return err
 	}
 
-	err = userService.userRepository.UpdateUser(ctx, id, name, address)
+	err = userService.userRepository.UpdateUser(ctx, uid, name)
 	if err != nil {
 		return err
 	}

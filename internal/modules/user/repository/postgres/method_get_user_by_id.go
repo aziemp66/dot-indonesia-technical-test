@@ -2,18 +2,24 @@ package user_repository_postgres
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
-	user_model "backend-template/internal/modules/user/model"
+	user_model "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/model"
+	util_error "github.com/aziemp66/dot-indonesia-technical-test/util/error"
+
+	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
-// GetUserByID retrieves a user from the database based on their ID.
-// It returns the user details or an error if the query fails.
-func (userRepositoryPostgres *userRepositoryPostgres) GetUserByID(ctx context.Context, id string) (res user_model.User, err error) {
-	err = userRepositoryPostgres.db.GetContext(ctx, &res, getUserByID, id)
-
-	if err != nil {
-		return user_model.User{}, err
+func (r *userRepositoryPostgres) GetUserByID(ctx context.Context, id uuid.UUID) (user_model.User, error) {
+	user := user_model.User{
+		ID: id,
 	}
-
-	return res, nil
+	if err := r.db.First(&user).Error; errors.Is(err, gorm.ErrRecordNotFound) {
+		return user, util_error.NewNotFound(err, "user not found")
+	} else if err != nil {
+		return user, fmt.Errorf("error when finding user by ID: %w", err)
+	}
+	return user, nil
 }

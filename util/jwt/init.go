@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	util_error "backend-template/util/error"
+	util_error "github.com/aziemp66/dot-indonesia-technical-test/util/error"
 
 	jwt "github.com/golang-jwt/jwt/v5"
 )

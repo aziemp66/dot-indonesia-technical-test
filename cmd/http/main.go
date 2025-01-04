@@ -2,18 +2,19 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os/signal"
 	"syscall"
 	"time"
 
-	init_app "backend-template/internal"
-	pkg_config "backend-template/internal/pkg/config"
-	util_db "backend-template/util/db"
-	util_http "backend-template/util/http"
-	util_http_middleware "backend-template/util/http/middleware"
-	util_logger "backend-template/util/logger"
+	init_app "github.com/aziemp66/dot-indonesia-technical-test/internal"
+	pkg_config "github.com/aziemp66/dot-indonesia-technical-test/internal/pkg/config"
+	util_db "github.com/aziemp66/dot-indonesia-technical-test/util/db"
+	util_http "github.com/aziemp66/dot-indonesia-technical-test/util/http"
+	util_http_middleware "github.com/aziemp66/dot-indonesia-technical-test/util/http/middleware"
+	util_logger "github.com/aziemp66/dot-indonesia-technical-test/util/logger"
 
 	"github.com/gin-gonic/gin"
 )
@@ -36,10 +37,10 @@ func main() {
 		util_http_middleware.ErrorHandlerMiddleware(),
 	)
 
-	init_app.InitializeApp(router, pgDB)
+	init_app.InitializeApp(router, config, pgDB)
 
 	srv := &http.Server{
-		Addr:    ":8080",
+		Addr:    fmt.Sprintf(":%s", config.AppPort),
 		Handler: router,
 	}
 

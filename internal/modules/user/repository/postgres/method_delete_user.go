@@ -1,11 +1,17 @@
 package user_repository_postgres
 
-import "context"
+import (
+	"context"
+	"fmt"
 
-// DeleteUser removes a user from the database based on their ID.
-// It returns an error if the delete operation fails.
-func (userRepositoryPostgres *userRepositoryPostgres) DeleteUser(ctx context.Context, id string) (err error) {
-	_, err = userRepositoryPostgres.db.ExecContext(ctx, deleteUserQuery, id)
+	user_model "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/model"
 
-	return err
+	"github.com/google/uuid"
+)
+
+func (r *userRepositoryPostgres) DeleteUser(ctx context.Context, id uuid.UUID) error {
+	if err := r.db.Delete(&user_model.User{}, id).Error; err != nil {
+		return fmt.Errorf("error when deleting user: %w", err)
+	}
+	return nil
 }

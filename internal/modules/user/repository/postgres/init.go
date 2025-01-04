@@ -1,16 +1,16 @@
 package user_repository_postgres
 
 import (
-	user_repository "backend-template/internal/modules/user/repository"
+	user_repository "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/repository"
 
-	"github.com/jmoiron/sqlx"
+	"gorm.io/gorm"
 )
 
 type userRepositoryPostgres struct {
-	db *sqlx.DB
+	db *gorm.DB
 }
 
-func NewUserRepositoryPostgres(db *sqlx.DB) user_repository.UserRepository {
+func NewUserRepositoryPostgres(db *gorm.DB) user_repository.UserRepository {
 	return &userRepositoryPostgres{
 		db: db,
 	}

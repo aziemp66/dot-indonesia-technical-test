@@ -1,10 +1,14 @@
 package user_model
 
+import (
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
+
 type User struct {
-	ID         string `db:"id"`
-	Email      string `db:"email"`
-	Password   string `db:"password"`
-	Name       string `db:"name"`
-	Address    string `db:"address"`
-	IsVerified bool   `db:"is_verified"`
+	gorm.Model
+	ID       uuid.UUID `gorm:"type:uuid;default:gen_random_uuid()"`
+	Email    string    `gorm:"type:varchar(255);not null;unique"`
+	Password string    `gorm:"type:varchar(255);not null"`
+	Name     string    `gorm:"type:varchar(255);not null"`
 }

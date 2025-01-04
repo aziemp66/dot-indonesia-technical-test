@@ -1,20 +1,21 @@
 package user_http
 
 import (
-	user_model "backend-template/internal/modules/user/model"
-	mock_service "backend-template/mock/service"
-	mock_util "backend-template/mock/util"
-	util_error "backend-template/util/error"
-	util_http "backend-template/util/http"
-	util_http_middleware "backend-template/util/http/middleware"
-	util_jwt "backend-template/util/jwt"
-	util_logger "backend-template/util/logger"
 	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	user_model "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/model"
+	mock_service "github.com/aziemp66/dot-indonesia-technical-test/mock/service"
+	mock_util "github.com/aziemp66/dot-indonesia-technical-test/mock/util"
+	util_error "github.com/aziemp66/dot-indonesia-technical-test/util/error"
+	util_http "github.com/aziemp66/dot-indonesia-technical-test/util/http"
+	util_http_middleware "github.com/aziemp66/dot-indonesia-technical-test/util/http/middleware"
+	util_jwt "github.com/aziemp66/dot-indonesia-technical-test/util/jwt"
+	util_logger "github.com/aziemp66/dot-indonesia-technical-test/util/logger"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -61,7 +62,7 @@ func TestUserHttpHandlerUpdateProfile(t *testing.T) {
 
 	t.Run("should successfully update profile", func(t *testing.T) {
 		jwtMock.EXPECT().VerifyAuthToken(userToken).Return(claims, nil)
-		serviceMock.EXPECT().UpdateUser(gomock.Any(), claims.ID, reqBody.Name, reqBody.Address).Return(nil)
+		serviceMock.EXPECT().UpdateUser(gomock.Any(), claims.ID, reqBody.Name).Return(nil)
 
 		req := httptest.NewRequest(http.MethodPut, url, bytes.NewReader(reqBodyBytes))
 		req.Header.Add(util_http.HEADER_AUTH, tokenBearer)
@@ -80,7 +81,7 @@ func TestUserHttpHandlerUpdateProfile(t *testing.T) {
 	t.Run("should return error when service error", func(t *testing.T) {
 		jwtMock.EXPECT().VerifyAuthToken(userToken).Return(claims, nil)
 		expectErr := util_error.NewBadRequest(nil, "Address Should Not be Empty")
-		serviceMock.EXPECT().UpdateUser(gomock.Any(), claims.ID, reqBody.Name, reqBody.Address).Return(expectErr)
+		serviceMock.EXPECT().UpdateUser(gomock.Any(), claims.ID, reqBody.Name).Return(expectErr)
 
 		req := httptest.NewRequest(http.MethodPut, url, bytes.NewReader(reqBodyBytes))
 		req.Header.Add(util_http.HEADER_AUTH, tokenBearer)

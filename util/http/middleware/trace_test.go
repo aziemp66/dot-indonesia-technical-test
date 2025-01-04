@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	util_http "backend-template/util/http"
-	util_http_middleware "backend-template/util/http/middleware"
+	util_http "github.com/aziemp66/dot-indonesia-technical-test/util/http"
+	util_http_middleware "github.com/aziemp66/dot-indonesia-technical-test/util/http/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/require"

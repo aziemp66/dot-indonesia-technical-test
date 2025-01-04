@@ -1,8 +1,8 @@
 package user_http
 
 import (
-	user_model "backend-template/internal/modules/user/model"
-	util_http "backend-template/util/http"
+	user_model "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/model"
+	util_http "github.com/aziemp66/dot-indonesia-technical-test/util/http"
 
 	"github.com/gin-gonic/gin"
 )

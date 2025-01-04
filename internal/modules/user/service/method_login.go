@@ -1,11 +1,12 @@
 package user_service
 
 import (
-	util_error "backend-template/util/error"
-	util_jwt "backend-template/util/jwt"
 	"context"
 	"database/sql"
 	"time"
+
+	util_error "github.com/aziemp66/dot-indonesia-technical-test/util/error"
+	util_jwt "github.com/aziemp66/dot-indonesia-technical-test/util/jwt"
 )
 
 func (userService *userService) Login(ctx context.Context, email string, password string) (token string, err error) {
@@ -20,7 +21,7 @@ func (userService *userService) Login(ctx context.Context, email string, passwor
 		return "", err
 	}
 
-	token, err = userService.jwtManager.GenerateAuthToken(user.ID, user.Name, util_jwt.USER_ROLE, 24*time.Hour)
+	token, err = userService.jwtManager.GenerateAuthToken(user.ID.String(), user.Name, util_jwt.USER_ROLE, 24*time.Hour)
 	if err != nil {
 		return "", err
 	}

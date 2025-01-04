@@ -1,9 +1,20 @@
 package user_service
 
-import "context"
+import (
+	"context"
+
+	util_error "github.com/aziemp66/dot-indonesia-technical-test/util/error"
+
+	"github.com/google/uuid"
+)
 
 func (userService *userService) ChangePassword(ctx context.Context, id, oldPassword, newPassword string) (err error) {
-	user, err := userService.userRepository.GetUserByID(ctx, id)
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		return util_error.NewBadRequest(err, "id must be uuid")
+	}
+
+	user, err := userService.userRepository.GetUserByID(ctx, uid)
 	if err != nil {
 		return err
 	}
@@ -21,7 +32,7 @@ func (userService *userService) ChangePassword(ctx context.Context, id, oldPassw
 		return err
 	}
 
-	err = userService.userRepository.ChangePassword(ctx, id, hashedPassword)
+	err = userService.userRepository.ChangePassword(ctx, uid, hashedPassword)
 	if err != nil {
 		return err
 	}

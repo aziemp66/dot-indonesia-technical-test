@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 
-	user_model "backend-template/internal/modules/user/model"
-	util_error "backend-template/util/error"
+	user_model "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/model"
+	util_error "github.com/aziemp66/dot-indonesia-technical-test/util/error"
 )
 
 func (userService *userService) GetUserByEmail(ctx context.Context, email string) (res user_model.GetUserResponse, err error) {
@@ -19,9 +19,8 @@ func (userService *userService) GetUserByEmail(ctx context.Context, email string
 	}
 
 	return user_model.GetUserResponse{
-		ID:      user.ID,
-		Email:   user.Email,
-		Name:    user.Name,
-		Address: user.Address,
+		ID:    user.ID.String(),
+		Email: user.Email,
+		Name:  user.Name,
 	}, nil
 }

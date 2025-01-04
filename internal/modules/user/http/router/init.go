@@ -1,9 +1,9 @@
 package user_http_router
 
 import (
-	user_http "backend-template/internal/modules/user/http"
-	util_http_middleware "backend-template/util/http/middleware"
-	util_jwt "backend-template/util/jwt"
+	user_http "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/http"
+	util_http_middleware "github.com/aziemp66/dot-indonesia-technical-test/util/http/middleware"
+	util_jwt "github.com/aziemp66/dot-indonesia-technical-test/util/jwt"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,12 +13,9 @@ func BindUserHttpRouter(router *gin.RouterGroup, handler user_http.UserHttpHandl
 
 	router.POST("/register", handler.Register)
 	router.POST("/login", handler.Login)
-	router.POST("/forgot-password", handler.ForgotPassword)
-	router.POST("/reset-password/:token", handler.ResetPassword)
-	router.POST("/verify/:token", handler.VerifyUser)
 
 	userRoutes := router.Group(
-		"/user",
+		"",
 		util_http_middleware.JWTAuthentication(jwtManager),
 		util_http_middleware.JWTAuthorization(util_jwt.USER_ROLE),
 	)

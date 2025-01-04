@@ -2,16 +2,22 @@ package user_repository_postgres
 
 import (
 	"context"
+	"fmt"
+
+	user_model "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/model"
+
+	"github.com/google/uuid"
 )
 
-// CreateUser inserts a new user into the database with the provided details.
-// It returns the newly created user's ID or an error if the operation fails.
-func (userRepositoryPostgres *userRepositoryPostgres) CreateUser(ctx context.Context, email string, hashedPassword, name string, address string) (id string, err error) {
-	row := userRepositoryPostgres.db.QueryRowxContext(ctx, createUserQuery, email, hashedPassword, name, address)
-
-	if err := row.Scan(&id); err != nil {
-		return "", err
+func (r *userRepositoryPostgres) CreateUser(ctx context.Context, email, hashedPassword, name string) (string, error) {
+	user := &user_model.User{
+		ID:       uuid.New(),
+		Email:    email,
+		Password: hashedPassword,
+		Name:     name,
 	}
-
-	return id, nil
+	if err := r.db.WithContext(ctx).Create(user).Error; err != nil {
+		return "", fmt.Errorf("error when creating user: %w", err)
+	}
+	return user.ID.String(), nil
 }

@@ -1,9 +1,10 @@
 package util_http_middleware
 
 import (
-	util_error "backend-template/util/error"
-	util_jwt "backend-template/util/jwt"
 	"errors"
+
+	util_error "github.com/aziemp66/dot-indonesia-technical-test/util/error"
+	util_jwt "github.com/aziemp66/dot-indonesia-technical-test/util/jwt"
 
 	"github.com/gin-gonic/gin"
 )

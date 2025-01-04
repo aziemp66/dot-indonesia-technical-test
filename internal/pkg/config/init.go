@@ -5,8 +5,8 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
-func LoadConfig() *config {
-	cfg := new(config)
+func LoadConfig() *Config {
+	cfg := new(Config)
 	if err := env.Parse(cfg); err != nil {
 		panic(err)
 	}

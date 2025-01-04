@@ -7,11 +7,12 @@ import (
 	"fmt"
 	"testing"
 
-	user_model "backend-template/internal/modules/user/model"
-	mock_repository "backend-template/mock/repository"
-	mock_util "backend-template/mock/util"
-	util_error "backend-template/util/error"
+	user_model "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/model"
+	mock_repository "github.com/aziemp66/dot-indonesia-technical-test/mock/repository"
+	mock_util "github.com/aziemp66/dot-indonesia-technical-test/mock/util"
+	util_error "github.com/aziemp66/dot-indonesia-technical-test/util/error"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -24,13 +25,12 @@ func TestUserServiceGetUserByEmail(t *testing.T) {
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
 	jwtMock := mock_util.NewMockJWTManager(ctrl)
 	passwordMock := mock_util.NewMockPasswordManager(ctrl)
-	mailMock := mock_util.NewMockMailManager(ctrl)
 
-	service := NewUserService(repoMock, jwtMock, passwordMock, mailMock)
+	service := NewUserService(repoMock, jwtMock, passwordMock)
 
 	emailReq := "test@example.com"
 	userRes := user_model.GetUserResponse{
-		ID:      "123",
+		ID:      uuid.NewString(),
 		Name:    "John Smith",
 		Address: "Sesame Street No.5",
 		Email:   emailReq,
@@ -38,12 +38,10 @@ func TestUserServiceGetUserByEmail(t *testing.T) {
 
 	t.Run("should get user by email", func(t *testing.T) {
 		repoRes := user_model.User{
-			ID:         userRes.ID,
-			Email:      emailReq,
-			Password:   "secured_password",
-			Name:       userRes.Name,
-			Address:    userRes.Address,
-			IsVerified: true,
+			ID:       uuid.MustParse(userRes.ID),
+			Email:    emailReq,
+			Password: "secured_password",
+			Name:     userRes.Name,
 		}
 		repoMock.EXPECT().GetUserByEmail(gomock.Any(), emailReq).
 			Return(repoRes, nil)

@@ -1,15 +1,17 @@
 package user_service
 
 import (
-	user_model "backend-template/internal/modules/user/model"
-	mock_repository "backend-template/mock/repository"
-	mock_util "backend-template/mock/util"
-	util_error "backend-template/util/error"
 	"context"
 	"errors"
 	"fmt"
 	"testing"
 
+	user_model "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/model"
+	mock_repository "github.com/aziemp66/dot-indonesia-technical-test/mock/repository"
+	mock_util "github.com/aziemp66/dot-indonesia-technical-test/mock/util"
+	util_error "github.com/aziemp66/dot-indonesia-technical-test/util/error"
+
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -22,28 +24,25 @@ func TestUserServiceUpdateUser(t *testing.T) {
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
 	jwtMock := mock_util.NewMockJWTManager(ctrl)
 	passwordMock := mock_util.NewMockPasswordManager(ctrl)
-	mailMock := mock_util.NewMockMailManager(ctrl)
 
-	service := NewUserService(repoMock, jwtMock, passwordMock, mailMock)
+	service := NewUserService(repoMock, jwtMock, passwordMock)
 
-	id := "1"
+	id := uuid.New()
 	name := "John Doe"
-	address := "123 Sesame Street"
 
 	repoRes := user_model.User{
 		ID:       id,
 		Email:    "johndoe@gmail.com",
 		Password: "secure_password",
 		Name:     name,
-		Address:  address,
 	}
 
 	t.Run("should update user successfully", func(t *testing.T) {
 		repoMock.EXPECT().GetUserByID(gomock.Any(), id).Return(repoRes, nil)
 
-		repoMock.EXPECT().UpdateUser(gomock.Any(), id, name, address).Return(nil)
+		repoMock.EXPECT().UpdateUser(gomock.Any(), id, name).Return(nil)
 
-		err := service.UpdateUser(context.Background(), id, name, address)
+		err := service.UpdateUser(context.Background(), id.String(), name)
 
 		require.NoError(t, err)
 	})
@@ -53,7 +52,7 @@ func TestUserServiceUpdateUser(t *testing.T) {
 
 		repoMock.EXPECT().GetUserByID(gomock.Any(), "").Return(user_model.User{}, expectedErr)
 
-		err := service.UpdateUser(context.Background(), "", "", "")
+		err := service.UpdateUser(context.Background(), "", "")
 
 		require.Error(t, err)
 		assert.EqualError(t, err, expectedErr.Error())
@@ -63,7 +62,7 @@ func TestUserServiceUpdateUser(t *testing.T) {
 		expectedErr := util_error.NewNotFound(fmt.Errorf("user with the id of %s is not found", id), "User not found")
 		repoMock.EXPECT().GetUserByID(gomock.Any(), id).Return(user_model.User{}, expectedErr)
 
-		err := service.UpdateUser(context.Background(), id, "", "")
+		err := service.UpdateUser(context.Background(), id.String(), "")
 
 		require.Error(t, err)
 		assert.EqualError(t, err, expectedErr.Error())

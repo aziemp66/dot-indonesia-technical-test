@@ -7,11 +7,12 @@ import (
 	"fmt"
 	"testing"
 
-	user_model "backend-template/internal/modules/user/model"
-	mock_repository "backend-template/mock/repository"
-	mock_util "backend-template/mock/util"
-	util_error "backend-template/util/error"
+	user_model "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/model"
+	mock_repository "github.com/aziemp66/dot-indonesia-technical-test/mock/repository"
+	mock_util "github.com/aziemp66/dot-indonesia-technical-test/mock/util"
+	util_error "github.com/aziemp66/dot-indonesia-technical-test/util/error"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -24,14 +25,13 @@ func TestUserServiceGetUserByID(t *testing.T) {
 	repoMock := mock_repository.NewMockUserRepository(ctrl)
 	jwtMock := mock_util.NewMockJWTManager(ctrl)
 	passwordMock := mock_util.NewMockPasswordManager(ctrl)
-	mailMock := mock_util.NewMockMailManager(ctrl)
 
-	service := NewUserService(repoMock, jwtMock, passwordMock, mailMock)
+	service := NewUserService(repoMock, jwtMock, passwordMock)
 
-	idReq := "123"
+	idReq := uuid.New()
 
 	userRes := user_model.GetUserResponse{
-		ID:      idReq,
+		ID:      idReq.String(),
 		Name:    "John Smith",
 		Address: "Sesame Street No.5",
 		Email:   "johnsmith123@gmail.com",
@@ -39,18 +39,16 @@ func TestUserServiceGetUserByID(t *testing.T) {
 
 	t.Run("should get user by id", func(t *testing.T) {
 		repoRes := user_model.User{
-			ID:         idReq,
-			Email:      userRes.Email,
-			Password:   "secured_password",
-			Name:       userRes.Name,
-			Address:    userRes.Address,
-			IsVerified: true,
+			ID:       idReq,
+			Email:    userRes.Email,
+			Password: "secured_password",
+			Name:     userRes.Name,
 		}
 
 		repoMock.EXPECT().GetUserByID(gomock.Any(), idReq).
 			Return(repoRes, nil)
 
-		res, err := service.GetUserByID(context.Background(), idReq)
+		res, err := service.GetUserByID(context.Background(), idReq.String())
 
 		require.Nil(t, err)
 		assert.Equal(t, userRes, res)
@@ -62,7 +60,7 @@ func TestUserServiceGetUserByID(t *testing.T) {
 		repoMock.EXPECT().GetUserByID(gomock.Any(), idReq).
 			Return(user_model.User{}, sql.ErrNoRows)
 
-		_, err := service.GetUserByID(context.Background(), idReq)
+		_, err := service.GetUserByID(context.Background(), idReq.String())
 
 		require.Error(t, err)
 		assert.EqualError(t, expectedErr, err.Error())
@@ -74,7 +72,7 @@ func TestUserServiceGetUserByID(t *testing.T) {
 		repoMock.EXPECT().GetUserByID(gomock.Any(), idReq).
 			Return(user_model.User{}, expectedErr)
 
-		_, err := service.GetUserByID(context.Background(), idReq)
+		_, err := service.GetUserByID(context.Background(), idReq.String())
 		require.Error(t, err)
 		assert.EqualError(t, expectedErr, err.Error())
 	})
