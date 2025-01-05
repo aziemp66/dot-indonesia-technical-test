@@ -11,6 +11,7 @@ import (
 
 	init_app "github.com/aziemp66/dot-indonesia-technical-test/internal"
 	pkg_config "github.com/aziemp66/dot-indonesia-technical-test/internal/pkg/config"
+	"github.com/aziemp66/dot-indonesia-technical-test/migrate"
 	util_db "github.com/aziemp66/dot-indonesia-technical-test/util/db"
 	util_http "github.com/aziemp66/dot-indonesia-technical-test/util/http"
 	util_http_middleware "github.com/aziemp66/dot-indonesia-technical-test/util/http/middleware"
@@ -26,6 +27,8 @@ func main() {
 
 	config := pkg_config.LoadConfig()
 	pgDB := util_db.NewPostgresDB(config.PostgresHost, config.PostgresUser, config.PostgresPassword, config.PostgresDbName, config.PostgresPort)
+
+	migrate.AutoMigration(pgDB)
 
 	router := util_http.NewHTTPServer(config.AppEnv)
 	util_logger.InitLogger(config.AppEnv, config.AppName, config.AppLogPath)
