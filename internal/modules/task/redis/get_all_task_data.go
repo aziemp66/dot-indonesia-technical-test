@@ -9,23 +9,18 @@ import (
 )
 
 func GetAllTask(ctx context.Context, r util_redis.RedisManager, userID string) ([]task_model.GetTaskResponse, error) {
-	key := getTaskKey(userID)
+	key := getAllTaskKey(userID)
 
-	fields, err := r.Client().HGetAll(ctx, key).Result()
+	data, err := r.Client().Get(ctx, key).Result()
 	if err != nil {
 		return nil, err
 	}
 
 	var tasks []task_model.GetTaskResponse
 
-	for _, v := range fields {
-		var task task_model.GetTaskResponse
-		err = json.Unmarshal([]byte(v), &task)
-		if err != nil {
-			return nil, err
-		}
-
-		tasks = append(tasks, task)
+	err = json.Unmarshal([]byte(data), &tasks)
+	if err != nil {
+		return nil, err
 	}
 
 	return tasks, nil

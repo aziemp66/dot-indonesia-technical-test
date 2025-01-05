@@ -24,11 +24,7 @@ func (userService *userService) GetUserByID(ctx context.Context, id string) (res
 	if err != nil && err != redis.Nil {
 		return user_model.GetUserResponse{}, err
 	} else if err == nil {
-		return user_model.GetUserResponse{
-			ID:    userRes.ID,
-			Email: userRes.Email,
-			Name:  userRes.Name,
-		}, nil
+		return userRes, nil
 	}
 
 	user, err := userService.userRepository.GetUserByID(ctx, uid)

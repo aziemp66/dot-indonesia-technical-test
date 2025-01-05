@@ -5,5 +5,5 @@ type GetTaskResponse struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 	Status      string `json:"status"`
-	UserID      string `json:"assignee"`
+	UserID      string `json:"user_id"`
 }

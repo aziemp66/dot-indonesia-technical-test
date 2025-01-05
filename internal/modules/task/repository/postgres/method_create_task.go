@@ -13,7 +13,7 @@ func (r *taskRepositoryPostgres) CreateTask(ctx context.Context, userID uuid.UUI
 		Title:       title,
 		Description: description,
 		Status:      status,
-		UsedID:      userID,
+		UserID:      userID,
 	}
 
 	if err := r.db.WithContext(ctx).Create(&task).Error; err != nil {

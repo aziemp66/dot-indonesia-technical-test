@@ -11,5 +11,5 @@ type Task struct {
 	Title       string    `gorm:"type:varchar(255);not null"`
 	Description string    `gorm:"type:text;not null"`
 	Status      string    `gorm:"type:varchar(255);not null"`
-	UsedID      uuid.UUID `gorm:"not null"`
+	UserID      uuid.UUID `gorm:"not null"`
 }
