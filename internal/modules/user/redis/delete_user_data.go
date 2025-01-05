@@ -9,5 +9,5 @@ import (
 // Delete user data
 func DeleteUserData(ctx context.Context, r util_redis.RedisManager, userID string) error {
 	key := getUserKey(userID)
-	return r.Delete(ctx, key)
+	return r.Client().Del(ctx, key).Err()
 }

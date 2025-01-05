@@ -1,13 +1,10 @@
 package util_redis
 
 import (
-	"context"
-	"time"
+	"github.com/redis/go-redis/v9"
 )
 
 type RedisManager interface {
-	Set(ctx context.Context, key string, value interface{}, expiration time.Duration) error
-	Get(ctx context.Context, key string, dest interface{}) error
-	Delete(ctx context.Context, key string) error
+	Client() *redis.Client
 	Close() error
 }
