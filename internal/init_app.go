@@ -1,6 +1,10 @@
 package init_app
 
 import (
+	task_http "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/task/http"
+	task_http_router "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/task/http/router"
+	task_repository_postgres "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/task/repository/postgres"
+	task_service "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/task/service"
 	user_http "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/http"
 	user_http_router "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/http/router"
 	user_repository_postgres "github.com/aziemp66/dot-indonesia-technical-test/internal/modules/user/repository/postgres"
@@ -22,4 +26,9 @@ func InitializeApp(router *gin.Engine, cfg *pkg_config.Config, db *gorm.DB) {
 	userService := user_service.NewUserService(userRepository, jwtManager, passwordManager, redisManager)
 	userHandler := user_http.NewUserHttpHandler(userService, jwtManager)
 	user_http_router.BindUserHttpRouter(router.Group("/user"), userHandler, jwtManager)
+
+	taskRepository := task_repository_postgres.NewTaskRepositoryPostgres(db)
+	taskService := task_service.NewTaskService(taskRepository, redisManager)
+	taskHandler := task_http.NewTaskHttpHandler(taskService, jwtManager)
+	task_http_router.BindTaskHttpRouter(router.Group("/task"), taskHandler, jwtManager)
 }

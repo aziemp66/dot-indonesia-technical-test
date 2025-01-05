@@ -16,6 +16,9 @@ func (s *taskService) GetTaskByID(ctx context.Context, id string, userID string)
 	if err != nil && err != redis.Nil {
 		return task_model.GetTaskResponse{}, err
 	} else if err == nil {
+		if taskRes.UserID != userID {
+			return task_model.GetTaskResponse{}, util_error.NewForbidden(err, "You are not the owner of this task")
+		}
 		return taskRes, nil
 	}
 
@@ -28,6 +31,10 @@ func (s *taskService) GetTaskByID(ctx context.Context, id string, userID string)
 	task, err := s.taskRepository.GetTaskByID(ctx, taskID)
 	if err != nil {
 		return task_model.GetTaskResponse{}, err
+	}
+
+	if task.UserID.String() != userID {
+		return task_model.GetTaskResponse{}, util_error.NewForbidden(err, "You are not the owner of this task")
 	}
 
 	taskRes = task_model.GetTaskResponse{
