@@ -25,6 +25,11 @@ func (s *taskService) UpdateTask(ctx context.Context, id, userID, title, descrip
 		return err
 	}
 
+	err = task_redis.DeleteTask(ctx, s.redisManager, userID, id)
+	if err != nil {
+		return err
+	}
+
 	err = task_redis.DeleteAllTask(ctx, s.redisManager, userID)
 	if err != nil {
 		return err

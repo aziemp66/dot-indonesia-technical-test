@@ -2,15 +2,15 @@ package user_service
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 
 	util_error "github.com/aziemp66/dot-indonesia-technical-test/util/error"
+	"gorm.io/gorm"
 )
 
 func (userService *userService) Register(ctx context.Context, email, password, name string) (id string, err error) {
 	_, err = userService.userRepository.GetUserByEmail(ctx, email)
-	if err != nil && err != sql.ErrNoRows {
+	if err != nil && err != gorm.ErrRecordNotFound {
 		return "", err
 	} else if err == nil {
 		return "", util_error.NewBadRequest(fmt.Errorf("%s is already registered", email), fmt.Sprintf("Email %s is already used", email))
